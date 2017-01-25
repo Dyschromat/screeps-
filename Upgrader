@@ -1,0 +1,40 @@
+module.exports = {
+    
+      run: function(creep) {
+        
+        //creep bringt Energie, hat aber selbst keine mehr
+        if (creep.memory.working == true && creep.carry.energy == 0) {
+            //Stateswitch
+            creep.memory.working = false;
+        }
+        //creep erntet aber ist voll
+        else if (creep.memory.working == false && creep.carry.energy == creep.carryCapacity) {
+            //Stateswitch
+            creep.memory.working = true;
+        }
+        
+        //creep sollte liefern
+        if (creep.memory.working == true) {
+            //versuche zu liefern, wenn nicht in range ...
+            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                //gehe in range des controllers
+                creep.moveTo(creep.room.controller);
+            }
+        }
+        //creep sollte von Quelle ernten
+        else {
+            //nächste Quelle finden
+            var source = creep.pos.findClosestByPath(FIND_SOURCES);
+            //wenn nicht in range ...
+            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                //gehe in range
+                creep.moveTo(source);   
+            }
+            
+            
+        }
+        
+    }
+
+
+};
